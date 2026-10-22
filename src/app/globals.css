@@ -1,0 +1,85 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary-espresso: #442013;
+  --secondary-chestnut: #6A3822;
+  --accent-cream: #F4E7D3;
+  --accent-ivory: #E5D5C2;
+}
+
+body {
+  background-color: #FAF8F5;
+  color: #2D231E;
+  font-family: 'Montserrat', system-ui, -apple-system, sans-serif;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #F4E7D3;
+}
+::-webkit-scrollbar-thumb {
+  background: #6A3822;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #442013;
+}
+
+/* Horizontal Fade for Carousel */
+.fade-out-x {
+  mask-image: linear-gradient(to right, rgba(0,0,0,0.1), rgba(0,0,0,0.9) 15%, rgba(0,0,0,0.9) 85%, rgba(0,0,0,0.1));
+  -webkit-mask-image: linear-gradient(to right, rgba(0,0,0,0.1), rgba(0,0,0,0.9) 15%, rgba(0,0,0,0.9) 85%, rgba(0,0,0,0.1));
+}
+
+/* Hide scrollbars */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Infinite Marquee for Floating Members */
+@keyframes marqueeScroll {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee-infinite {
+  display: flex;
+  width: max-content;
+  animation: marqueeScroll 28s linear infinite;
+}
+
+.animate-marquee-infinite:hover {
+  animation-play-state: paused;
+}
+
+/* Subtle Floating Card Effect */
+@keyframes floatCard {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.floating-card {
+  animation: floatCard 4s ease-in-out infinite;
+}
+
+.floating-card-delayed {
+  animation: floatCard 4s ease-in-out infinite 2s;
+}
