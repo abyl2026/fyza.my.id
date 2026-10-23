@@ -1,3 +1,25 @@
-node_modules
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
 
+# Next.js build output
+.next/
+out/
+
+# Environment files
+.env
+.env*.local
+
+# Database SQLite files
+database/*.db
+database/*.db-journal
+*.db
+*.db-journal
+
+# Temp & build artifacts
+*.tsbuildinfo
+next-env.d.ts
+.DS_Store
+Thumbs.db
 fyza.my.id/
