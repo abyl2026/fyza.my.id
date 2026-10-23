@@ -83,7 +83,8 @@ export default function AboutManager() {
     try {
       const body = new FormData();
       body.append('file', file);
-      const res = await fetch('/api/admin/upload', { method: 'POST', body });
+      body.append('folder', 'about');
+      const res = await fetch('/api/admin/uploads', { method: 'POST', body });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || 'Gagal upload file');
       onDone(data.url);
@@ -246,11 +247,6 @@ export default function AboutManager() {
                   <label className={labelClass}>Periode</label>
                   <input value={leaderPeriod} onChange={(e) => setLeaderPeriod(e.target.value)} className={inputClass} placeholder="2025/2026" />
                 </div>
-              </div>
-
-              <div>
-                <label className={labelClass}>Kutipan / Pesan Ketua</label>
-                <textarea value={leaderQuote} onChange={(e) => setLeaderQuote(e.target.value)} rows={2} className={inputClass} placeholder="Kutipan inspiratif ketua umum..." />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -441,20 +437,44 @@ export default function AboutManager() {
                     <div className="flex items-center gap-3">
                       <div className="w-12 h-12 rounded-xl bg-stone-100 border border-stone-200 overflow-hidden flex items-center justify-center relative">
                         {editor.data.photoUrl ? (
-                          <img src={String(editor.data.photoUrl)} alt="Preview" className="w-full h-full object-cover" />
+                          <img
+                            src={String(editor.data.photoUrl)}
+                            alt="Preview"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).src = '/image/anggota.jpg';
+                            }}
+                            className="w-full h-full object-cover"
+                          />
                         ) : (
                           <UserRound className="w-6 h-6 text-stone-300" />
                         )}
                       </div>
                       <div className="flex-1 space-y-1">
                         <label className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-stone-300 text-xs font-semibold text-stone-700 hover:bg-stone-50 cursor-pointer">
-                          <ImagePlus className="w-3.5 h-3.5" /> Unggah File
-                          <input type="file" accept="image/*" className="hidden" onChange={(e) => e.target.files?.[0] && handleFileUpload(e.target.files[0], (url) => setEditor({ ...editor, data: { ...editor.data, photoUrl: url } }))} />
+                          <ImagePlus className="w-3.5 h-3.5" /> {uploading ? 'Mengunggah...' : 'Unggah File'}
+                          <input
+                            type="file"
+                            accept="image/*"
+                            disabled={uploading}
+                            className="hidden"
+                            onChange={(e) =>
+                              e.target.files?.[0] &&
+                              handleFileUpload(e.target.files[0], (url) =>
+                                setEditor((prev: any) =>
+                                  prev ? { ...prev, data: { ...prev.data, photoUrl: url } } : null
+                                )
+                              )
+                            }
+                          />
                         </label>
                         {editor.data.photoUrl && (
                           <button
                             type="button"
-                            onClick={() => setEditor({ ...editor, data: { ...editor.data, photoUrl: '' } })}
+                            onClick={() =>
+                              setEditor((prev: any) =>
+                                prev ? { ...prev, data: { ...prev.data, photoUrl: '' } } : null
+                              )
+                            }
                             className="text-[11px] text-rose-600 hover:underline block"
                           >
                             Hapus Foto
@@ -506,7 +526,7 @@ export default function AboutManager() {
               <div className="flex justify-end gap-2 pt-2 border-t">
                 <button type="button" onClick={() => setEditor(null)} className="px-4 py-2 rounded-xl text-xs font-semibold border border-stone-200 text-stone-600 hover:bg-stone-50">Batal</button>
                 <button type="submit" disabled={savingEditor || uploading} className="px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider bg-[#442013] text-[#F4E7D3] hover:bg-[#6A3822] disabled:opacity-50">
-                  {savingEditor ? 'Menyimpan...' : 'Simpan'}
+                  {savingEditor ? 'Menyimpan...' : uploading ? 'Mengunggah Foto...' : editor.id ? 'Perbarui' : 'Simpan'}
                 </button>
               </div>
             </form>

@@ -265,6 +265,13 @@ export default function DivisionSection({ divisions }: DivisionSectionProps) {
                                   alt={m.name}
                                   width={56}
                                   height={56}
+                                  unoptimized
+                                  onError={(e) => {
+                                    const target = e.currentTarget;
+                                    if (!target.src.endsWith('/image/anggota.jpg')) {
+                                      target.src = '/image/anggota.jpg';
+                                    }
+                                  }}
                                   className="w-14 h-14 rounded-full object-cover shadow-sm border-2 border-brand-caramel p-0.5 bg-white"
                                 />
                                 <span className="absolute -bottom-1 -right-1 p-0.5 bg-brand-chocolate text-white rounded-full">
@@ -466,6 +473,13 @@ export default function DivisionSection({ divisions }: DivisionSectionProps) {
                             alt={m.name}
                             width={80}
                             height={80}
+                            unoptimized
+                            onError={(e) => {
+                              const target = e.currentTarget;
+                              if (!target.src.endsWith('/image/anggota.jpg')) {
+                                target.src = '/image/anggota.jpg';
+                              }
+                            }}
                             className="w-20 h-20 rounded-full object-cover shadow-md border-3 border-brand-caramel p-0.5 bg-white"
                           />
                           <span className="absolute -bottom-1 -right-1 p-1 bg-brand-chocolate text-white rounded-full">
@@ -497,6 +511,13 @@ export default function DivisionSection({ divisions }: DivisionSectionProps) {
                             alt={m.name}
                             width={80}
                             height={80}
+                            unoptimized
+                            onError={(e) => {
+                              const target = e.currentTarget;
+                              if (!target.src.endsWith('/image/anggota.jpg')) {
+                                target.src = '/image/anggota.jpg';
+                              }
+                            }}
                             className="w-20 h-20 rounded-full object-cover shadow-md border-3 border-brand-caramel p-0.5 bg-white"
                           />
                           <span className="absolute -bottom-1 -right-1 p-1 bg-brand-chocolate text-white rounded-full">

@@ -54,6 +54,13 @@ export default function LeaderSection({
                 src={displayPhoto}
                 alt={name || 'Ketua Umum'}
                 fill
+                unoptimized
+                onError={(e) => {
+                  const target = e.currentTarget;
+                  if (!target.src.endsWith('/image/ketua.jpg')) {
+                    target.src = '/image/ketua.jpg';
+                  }
+                }}
                 sizes="(max-width: 640px) 160px, 224px"
                 className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
               />
@@ -69,9 +76,6 @@ export default function LeaderSection({
             <h3 className="text-xl sm:text-3xl font-extrabold text-white tracking-tight">
               {name || 'M. Rizky Ramadhan'}
             </h3>
-            <p className="text-neutral-200 text-xs sm:text-sm mt-2 max-w-xs leading-relaxed italic">
-              &ldquo;{quote || 'Memimpin dengan integritas demi tegaknya independensi pers mahasiswa, menyuarakan kebenaran dengan data dan etika.'}&rdquo;
-            </p>
 
             {/* Badge Sosial Media Khusus (Touch target min 44px) */}
             <div className="mt-5 sm:mt-6 flex items-center justify-center gap-2.5 sm:gap-3 w-full pt-4 border-t border-white/15">

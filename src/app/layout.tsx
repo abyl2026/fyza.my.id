@@ -27,6 +27,14 @@ export const metadata: Metadata = {
   title: 'BAPEMA Cakrawala UMJ | Lembaga Pers Mahasiswa',
   description: 'Portal Resmi & Profil Lembaga Pers Mahasiswa (LPM) BAPEMA Cakrawala Universitas Muhammadiyah Jakarta. Suara Cakrawala, Suara Mahasiswa!',
   keywords: ['BAPEMA', 'Cakrawala', 'UMJ', 'Pers Mahasiswa', 'Jurnalistik', 'Jakarta'],
+  icons: {
+    icon: [
+      { url: '/image/logo.png', sizes: 'any' },
+      { url: '/icon.png', sizes: 'any' },
+    ],
+    shortcut: '/image/logo.png',
+    apple: '/image/logo.png',
+  },
 };
 
 export default function RootLayout({

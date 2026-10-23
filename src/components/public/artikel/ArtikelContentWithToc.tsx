@@ -166,18 +166,40 @@ export default function ArtikelContentWithToc({
             {content.split('\n\n').map((paragraph, idx) => {
               // Jika ini paragraf ke-2 dan ada artikel terkait, sisipkan blok "Baca Juga" persis seperti DewaBiz
               const shouldInsertReadAlso = idx === 1 && readAlsoArticle;
+              const trimmed = paragraph.trim();
+
+              // Deteksi format Markdown Image: ![caption](url)
+              const imgMatch = trimmed.match(/^!\[(.*?)\]\((.*?)\)$/);
 
               return (
                 <React.Fragment key={idx}>
-                  <p
-                    className={
-                      idx === 0
-                        ? 'text-base sm:text-lg text-neutral-800 leading-relaxed font-normal'
-                        : 'whitespace-pre-line text-neutral-700 leading-loose'
-                    }
-                  >
-                    {paragraph}
-                  </p>
+                  {imgMatch ? (
+                    <figure className="my-6 rounded-2xl overflow-hidden border border-brand-sand bg-stone-100 shadow-sm">
+                      <div className="relative w-full aspect-video sm:max-h-[460px]">
+                        <img
+                          src={imgMatch[2]}
+                          alt={imgMatch[1] || 'Dokumentasi Artikel'}
+                          className="w-full h-full object-cover"
+                          loading="lazy"
+                        />
+                      </div>
+                      {imgMatch[1] && (
+                        <figcaption className="p-3 text-center text-xs text-neutral-500 italic bg-[#FAF6F0] border-t border-brand-sand/50">
+                          {imgMatch[1]}
+                        </figcaption>
+                      )}
+                    </figure>
+                  ) : (
+                    <p
+                      className={
+                        idx === 0
+                          ? 'text-base sm:text-lg text-neutral-800 leading-relaxed font-normal'
+                          : 'whitespace-pre-line text-neutral-700 leading-loose'
+                      }
+                    >
+                      {paragraph}
+                    </p>
+                  )}
 
                   {shouldInsertReadAlso && (
                     <aside className="my-6 p-4 rounded-r-2xl border-l-4 border-brand-chocolate bg-amber-50/70 border border-brand-sand/60 flex flex-col gap-1 shadow-xs">

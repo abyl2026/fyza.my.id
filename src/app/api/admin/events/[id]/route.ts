@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import prisma from '@/lib/prisma';
 import { getSession } from '@/lib/auth';
 
@@ -81,6 +82,11 @@ export async function PUT(
       },
     });
 
+    try {
+      revalidatePath('/');
+      revalidatePath('/acara');
+    } catch {}
+
     return NextResponse.json({ message: 'Acara berhasil diperbarui.', event: updated });
   } catch (error) {
     console.error('Update event error:', error);
@@ -109,6 +115,12 @@ export async function DELETE(
     }
 
     await prisma.event.delete({ where: { id } });
+
+    try {
+      revalidatePath('/');
+      revalidatePath('/acara');
+    } catch {}
+
     return NextResponse.json({ message: 'Acara berhasil dihapus.' });
   } catch (error) {
     console.error('Delete event error:', error);

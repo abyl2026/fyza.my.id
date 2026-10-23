@@ -1,0 +1,1 @@
+{"version":1,"functions":{"/api/admin/about":{},"/api/admin/profile":{},"/api/admin/users":{},"/api/admin/uploads":{},"/api/auth/me":{},"/api/aspirasi":{},"/acara":{},"/uploads/[...path]":{},"/artikel":{},"/aspirasi":{},"/":{},"/api/admin/stats":{},"/tentang-kami":{},"/api/admin/aspirations/export":{},"/artikel/[slug]":{}}}

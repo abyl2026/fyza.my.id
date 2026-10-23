@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import prisma from '@/lib/prisma';
 import { getSession } from '@/lib/auth';
 
@@ -93,6 +94,13 @@ export async function PUT(
       },
     });
 
+    try {
+      revalidatePath('/');
+      revalidatePath('/artikel');
+      revalidatePath(`/artikel/${updated.slug}`);
+      revalidatePath('/tentang-kami');
+    } catch {}
+
     return NextResponse.json({ message: 'Artikel berhasil diperbarui.', article: updated });
   } catch (error) {
     console.error('Update article error:', error);
@@ -121,6 +129,14 @@ export async function DELETE(
     }
 
     await prisma.article.delete({ where: { id } });
+
+    try {
+      revalidatePath('/');
+      revalidatePath('/artikel');
+      revalidatePath(`/artikel/${existing.slug}`);
+      revalidatePath('/tentang-kami');
+    } catch {}
+
     return NextResponse.json({ message: 'Artikel berhasil dihapus.' });
   } catch (error) {
     console.error('Delete article error:', error);

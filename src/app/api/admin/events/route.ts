@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import prisma from '@/lib/prisma';
 import { getSession } from '@/lib/auth';
 
@@ -78,6 +79,11 @@ export async function POST(req: NextRequest) {
         createdBy: session.id,
       },
     });
+
+    try {
+      revalidatePath('/');
+      revalidatePath('/acara');
+    } catch {}
 
     return NextResponse.json({ message: 'Acara berhasil ditambahkan.', event }, { status: 201 });
   } catch (error) {

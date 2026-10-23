@@ -1,8 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import prisma from '@/lib/prisma';
 import { getSession } from '@/lib/auth';
 
 export const dynamic = 'force-dynamic';
+
+function revalidateAboutPages() {
+  try {
+    revalidatePath('/tentang-kami');
+    revalidatePath('/');
+  } catch (err) {
+    console.warn('Revalidation warning:', err);
+  }
+}
 
 function slugify(value: string) {
   return value
@@ -108,6 +118,7 @@ export async function POST(req: NextRequest) {
           sortOrder: Number(body.sortOrder) || 0,
         },
       });
+      revalidateAboutPages();
       return NextResponse.json({ message: 'Divisi berhasil ditambahkan.', item: division }, { status: 201 });
     }
 
@@ -128,6 +139,7 @@ export async function POST(req: NextRequest) {
           isActive: 1,
         },
       });
+      revalidateAboutPages();
       return NextResponse.json({ message: 'Anggota berhasil ditambahkan.', item: member }, { status: 201 });
     }
 
@@ -145,6 +157,7 @@ export async function POST(req: NextRequest) {
           targetOutput: body.targetOutput?.trim() || null,
         },
       });
+      revalidateAboutPages();
       return NextResponse.json({ message: 'Proker berhasil ditambahkan.', item: program }, { status: 201 });
     }
 
@@ -162,6 +175,7 @@ export async function POST(req: NextRequest) {
           sortOrder: Number(body.sortOrder) || 0,
         },
       });
+      revalidateAboutPages();
       return NextResponse.json({ message: 'Milestone timeline berhasil ditambahkan.', item: event }, { status: 201 });
     }
 
@@ -265,6 +279,7 @@ export async function PUT(req: NextRequest) {
         });
       }
 
+      revalidateAboutPages();
       return NextResponse.json({ message: 'Profil organisasi berhasil diperbarui.' });
     }
 
@@ -283,6 +298,7 @@ export async function PUT(req: NextRequest) {
           sortOrder: Number(body.sortOrder) || 0,
         },
       });
+      revalidateAboutPages();
       return NextResponse.json({ message: 'Divisi berhasil diperbarui.', item });
     }
 
@@ -297,6 +313,7 @@ export async function PUT(req: NextRequest) {
           sortOrder: Number(body.sortOrder) || 0,
         },
       });
+      revalidateAboutPages();
       return NextResponse.json({ message: 'Profil anggota berhasil diperbarui.', item });
     }
 
@@ -310,6 +327,7 @@ export async function PUT(req: NextRequest) {
           targetOutput: body.targetOutput?.trim() || null,
         },
       });
+      revalidateAboutPages();
       return NextResponse.json({ message: 'Program kerja berhasil diperbarui.', item });
     }
 
@@ -323,6 +341,7 @@ export async function PUT(req: NextRequest) {
           sortOrder: Number(body.sortOrder) || 0,
         },
       });
+      revalidateAboutPages();
       return NextResponse.json({ message: 'Milestone timeline berhasil diperbarui.', item });
     }
 
@@ -364,6 +383,7 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json({ message: 'Jenis data tidak dikenali.' }, { status: 400 });
     }
 
+    revalidateAboutPages();
     return NextResponse.json({ message: 'Data berhasil dihapus.' });
   } catch (error) {
     console.error('Error deleting about resource:', error);

@@ -21,6 +21,8 @@ import {
   User,
   BookOpen,
   Sparkles,
+  ImagePlus,
+  Loader2,
 } from 'lucide-react';
 import FileUpload from '@/components/admin/FileUpload';
 
@@ -69,6 +71,51 @@ export default function AdminArticlesPage() {
   const [status, setStatus] = useState<'draft' | 'published'>('published');
   const [isTop, setIsTop] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [uploadingBodyImage, setUploadingBodyImage] = useState(false);
+  const contentTextareaRef = React.useRef<HTMLTextAreaElement>(null);
+
+  const handleUploadBodyImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploadingBodyImage(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('folder', 'articles');
+
+      const res = await fetch('/api/admin/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.message || 'Gagal mengunggah foto');
+      }
+
+      // Sisipkan tag gambar ke textarea posisi kursor
+      const imgTag = `\n\n![Dokumentasi Liputan](${data.url})\n\n`;
+      const textarea = contentTextareaRef.current;
+      if (textarea) {
+        const start = textarea.selectionStart;
+        const end = textarea.selectionEnd;
+        const newContent = content.substring(0, start) + imgTag + content.substring(end);
+        setContent(newContent);
+        setTimeout(() => {
+          textarea.focus();
+          textarea.setSelectionRange(start + imgTag.length, start + imgTag.length);
+        }, 50);
+      } else {
+        setContent((prev) => prev + imgTag);
+      }
+    } catch (err: any) {
+      alert(err.message || 'Gagal mengunggah gambar');
+    } finally {
+      setUploadingBodyImage(false);
+      e.target.value = '';
+    }
+  };
 
   // Esc key to close modal
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
@@ -593,27 +640,57 @@ export default function AdminArticlesPage() {
 
                   {/* Body Artikel Lengkap (WordPress Style Canvas) */}
                   <div className="bg-white rounded-2xl p-6 md:p-8 border border-[#E5D5C2]/40 shadow-sm space-y-3">
-                    <div className="flex items-center justify-between pb-3 border-b border-stone-100">
+                    <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-stone-100">
                       <div>
                         <label className="block text-xs font-bold uppercase tracking-wider text-[#442013]">
                           Isi Naskah Artikel (Body Content) *
                         </label>
                         <p className="text-xs text-stone-400">
-                          Format mendukung penulisan naskah panjang dengan paragraf, kutipan, dan informasi liputan.
+                          Format mendukung penulisan teks, paragraf, dan penyisipan foto liputan di dalam naskah.
                         </p>
                       </div>
-                      <div className="text-xs font-mono text-stone-400">
-                        {content.length} karakter
+
+                      <div className="flex items-center gap-3">
+                        <label className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[#6A3822]/40 bg-[#FAF6F0] hover:bg-[#E5D5C2]/40 text-[#442013] text-xs font-bold cursor-pointer transition shadow-xs active:scale-95">
+                          {uploadingBodyImage ? (
+                            <>
+                              <Loader2 className="w-3.5 h-3.5 animate-spin text-[#6A3822]" />
+                              <span>Mengunggah...</span>
+                            </>
+                          ) : (
+                            <>
+                              <ImagePlus className="w-3.5 h-3.5 text-[#6A3822]" />
+                              <span>+ Sisipkan Gambar ke Naskah</span>
+                            </>
+                          )}
+                          <input
+                            type="file"
+                            accept="image/*"
+                            disabled={uploadingBodyImage}
+                            onChange={handleUploadBodyImage}
+                            className="hidden"
+                          />
+                        </label>
+
+                        <div className="text-xs font-mono text-stone-400">
+                          {content.length} karakter
+                        </div>
                       </div>
                     </div>
+
                     <textarea
+                      ref={contentTextareaRef}
                       required
                       rows={18}
                       value={content}
                       onChange={(e) => setContent(e.target.value)}
-                      placeholder="Mulai menuliskan naskah berita, opini, atau liputan investigasi di sini...&#10;&#10;Gunakan paragraf baru untuk memisahkan ide pokok naskah."
+                      placeholder="Mulai menuliskan naskah berita, opini, atau liputan investigasi di sini...&#10;&#10;Gunakan tombol '+ Sisipkan Gambar ke Naskah' di atas untuk menyisipkan foto liputan ke dalam naskah.&#10;&#10;Gunakan paragraf baru untuk memisahkan ide pokok naskah."
                       className="w-full text-sm text-stone-800 leading-relaxed font-sans px-4 py-4 rounded-xl border border-stone-300 focus:outline-none focus:border-[#6A3822] focus:ring-2 focus:ring-[#6A3822]/20 transition font-normal"
                     />
+
+                    <p className="text-[11px] text-stone-400">
+                      💡 <strong>Tips:</strong> Anda dapat meletakkan kursor di bagian paragraf tertentu lalu klik <strong>&quot;+ Sisipkan Gambar ke Naskah&quot;</strong>. Gambar akan langsung disisipkan di posisi tersebut dan otomatis tampil di halaman baca artikel.
+                    </p>
                   </div>
                 </div>
 

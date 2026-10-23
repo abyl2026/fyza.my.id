@@ -160,7 +160,7 @@ export default function Footer() {
               href="/admin/login"
               className="opacity-40 hover:opacity-100 hover:text-brand-caramel transition-opacity ml-1.5 inline-block py-1"
             >
-              Panel Admin
+              Panel admin
             </Link>
           </p>
           <p>Jl. K.H. Ahmad Dahlan, Cirendeu, Ciputat Timur, Tangerang Selatan 15419</p>

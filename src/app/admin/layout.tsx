@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import AdminSidebar from '@/components/admin/AdminSidebar';
 import AdminNavbar from '@/components/admin/AdminNavbar';
+import { SidebarProvider } from '@/components/admin/SidebarContext';
 
 interface UserData {
   id: number;
@@ -110,15 +111,17 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   }
 
   return (
-    <div className="fixed inset-0 w-full h-full flex bg-[#FAF6F0] overflow-hidden">
-      {/* Sidebar Nav: Permanently fixed on the left, full height, never sinks or scrolls out */}
-      <AdminSidebar userRole={user?.role || 'admin'} userName={user?.name || 'Admin'} />
+    <SidebarProvider>
+      <div className="fixed inset-0 w-full h-full flex bg-[#FAF6F0] overflow-hidden">
+        {/* Sidebar Nav: Permanently fixed on the left, full height, with collapsible drawer */}
+        <AdminSidebar userRole={user?.role || 'admin'} userName={user?.name || 'Admin'} />
 
-      {/* Main Content Area: Navbar fixed at top, page content scrolls independently */}
-      <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden">
-        <AdminNavbar userName={user?.name || 'Admin'} userRole={user?.role || 'admin'} />
-        <main className="flex-1 min-h-0 p-6 md:p-8 overflow-y-auto bg-[#FAF6F0]">{children}</main>
+        {/* Main Content Area: Navbar fixed at top, page content scrolls independently */}
+        <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden">
+          <AdminNavbar userName={user?.name || 'Admin'} userRole={user?.role || 'admin'} />
+          <main className="flex-1 min-h-0 p-6 md:p-8 overflow-y-auto bg-[#FAF6F0]">{children}</main>
+        </div>
       </div>
-    </div>
+    </SidebarProvider>
   );
 }
